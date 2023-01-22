@@ -17,6 +17,7 @@ The following environment variables can be used to configure the backup strategy
 
 - `BACKUP_NAME`: The name of your backup (should be unique, e.g. `prod-db-backups`)
 - `BACKUP_ENCRYPTION_KEY`: An optional passphrase to encrypt your backups with before they are stored remotely.
+- `BACKUP_ENCRYPTION_KEY_FILE`: An optional path (in container) to file with passphrase to encrypt your backups with before they are stored remotely (overwrite `BACKUP_ENCRYPTION_KEY`).
 - `BACKUP_SCHEDULE`: Cron-like string to define the frequency at which backups should be made (e.g. `0 2 * * *` for `Every day at 2am`). Note that this string should be indicated in the UTC timezone.
 - `BACKUP_LOCATION`: [Duplicacy URI](https://github.com/gilbertchen/duplicacy/wiki/Storage-Backends) of where to store the backups.
     - S3: `s3://region@amazon.com/bucket/path/to/storage`
@@ -43,7 +44,7 @@ You need to provide credentials for the storage provider your of your choice usi
 
 If you want to execute an out of schedule backup, you can do so by running the script `/app/backup.sh` inside the container :
 
-``` 
+```
 $ docker exec duplicacy-autobackup /app/duplicacy-autobackup.sh backup
 ```
 
@@ -96,8 +97,8 @@ Backups are useless if you don't make sure they work. This shows the procedure t
   Storage set to s3://eu-west-1@amazon.com/xtof-db-backups
   Enter storage password:*******************
   Snapshot db-backups revision 1 created at 2018-04-19 09:47 -hash
-  Snapshot db-backups revision 2 created at 2018-04-19 09:48 
-  Snapshot db-backups revision 3 created at 2018-04-19 09:49 
+  Snapshot db-backups revision 2 created at 2018-04-19 09:48
+  Snapshot db-backups revision 3 created at 2018-04-19 09:49
   ```
 
 - To view the files of a particular revision, run:
@@ -127,7 +128,7 @@ You can have duplicacy-autobackup run a script before and after the backup proce
 Use the following environment variables if you want to customize duplicacy's behavior.
 
 - `BACKUP_IMMEDIATELY` (`yes`/`no`): indicates if a backup should be performed immediately after the container is started. Equivalent to launching the container and then running `docker exec duplicacy-autobackup /app/duplicacy-autobackup.sh backup`. By default, `no`.
-- `DUPLICACY_INIT_OPTIONS`: options passed to `duplicacy init` the first time a backup is made. By default, `-encrypt` if `BACKUP_ENCRYPTION_KEY` is not empty.
+- `DUPLICACY_INIT_OPTIONS`: options passed to `duplicacy init` the first time a backup is made. By default, `-encrypt` if `BACKUP_ENCRYPTION_KEY` or `BACKUP_ENCRYPTION_KEY_FILE` is not empty.
 - `DUPLICACY_BACKUP_OPTIONS`: options passed to `duplicacy backup` when a backup is performed. By default: `-threads 4 -stats`. **If you are backing up a hard drive (and not a SSD), it is recommended to use `-threads 1 -stats` instead** (see [here](https://duplicacy.com/issue?id=5670666258874368) for more details).
 
 ### Pruning old backups

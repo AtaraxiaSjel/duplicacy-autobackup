@@ -9,7 +9,7 @@ do_init() {
   : ${BACKUP_NAME:?'Missing BACKUP_NAME'}
   : ${BACKUP_LOCATION:?'Missing BACKUP_LOCATION'}
 
-  if [[ ! -z "$BACKUP_ENCRYPTION_KEY" ]]; then
+  if [[ ! -z "$BACKUP_ENCRYPTION_KEY" ]] || [[ ! -z "$BACKUP_ENCRYPTION_KEY_FILE" ]]; then
     echo "This backup will be encrypted."
     export DUPLICACY_INIT_OPTIONS="-encrypt $DUPLICACY_INIT_OPTIONS"
   fi
@@ -64,6 +64,10 @@ do_prune() {
   fi
 }
 
+if [[ ! -z "$BACKUP_ENCRYPTION_KEY_FILE" ]]; then
+  BACKUP_ENCRYPTION_KEY=$(cat "$BACKUP_ENCRYPTION_KEY_FILE")
+fi
+
 export DUPLICACY_PASSWORD=$BACKUP_ENCRYPTION_KEY
 export DUPLICACY_S3_ID=$AWS_ACCESS_KEY_ID
 export DUPLICACY_S3_SECRET=$AWS_SECRET_KEY
@@ -89,9 +93,9 @@ if [[ "$1" == "init" ]]; then
     echo 'This folder has already been initialized with duplicacy. Not initializing again'
   fi
 elif [[ "$1" == "backup" ]]; then
-  do_backup 
+  do_backup
 elif [[ "$1" == "prune" ]]; then
   do_prune
-else 
+else
   echo "Unknown command: $1" >&2
 fi
