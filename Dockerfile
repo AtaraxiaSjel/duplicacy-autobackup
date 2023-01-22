@@ -1,10 +1,10 @@
-FROM alpine:3.15.0
-MAINTAINER Christophe Tafani-Dereeper <christophe@tafani-dereeper.me>
+FROM alpine:3.17.0
+LABEL org.opencontainers.image.authors="Dmitriy <ataraxiadev@ataraxiadev.com>"
 
 #--
 #-- Build variables
 #--
-ARG DUPLICACY_VERSION=2.7.2
+ARG DUPLICACY_VERSION=3.1.0
 
 #--
 #-- Environment variables
