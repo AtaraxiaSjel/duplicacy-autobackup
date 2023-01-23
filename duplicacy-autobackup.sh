@@ -14,6 +14,12 @@ do_init() {
     export DUPLICACY_INIT_OPTIONS="-encrypt $DUPLICACY_INIT_OPTIONS"
   fi
 
+  if [[ ! -z "$DUPLICACY_CONFIG_PATH" ]]; then
+    echo "This backup repository config will be in $DUPLICACY_CONFIG_PATH directory"
+    cd $DUPLICACY_CONFIG_PATH
+    export DUPLICACY_INIT_OPTIONS="-repository /data $DUPLICACY_INIT_OPTIONS"
+  fi
+
   duplicacy init $DUPLICACY_INIT_OPTIONS $BACKUP_NAME "$BACKUP_LOCATION"
   if [[ $? != 0 ]]; then
     echo "duplicacy init command failed. Aborting" >&2
@@ -23,6 +29,8 @@ do_init() {
 }
 
 do_backup() {
+  [ ! -z "$DUPLICACY_CONFIG_PATH" ] && cd $DUPLICACY_CONFIG_PATH
+
   status=0
   if [[ -f $PRE_BACKUP_SCRIPT ]]; then
     echo "Running pre-backup script"
@@ -54,6 +62,7 @@ do_backup() {
 
 do_prune() {
   if [[ ! -z "$DUPLICACY_PRUNE_OPTIONS" ]]; then
+    [ ! -z "$DUPLICACY_CONFIG_PATH" ] && cd $DUPLICACY_CONFIG_PATH
     echo "Running prunning"
     duplicacy -log prune $DUPLICACY_PRUNE_OPTIONS
     status=$?

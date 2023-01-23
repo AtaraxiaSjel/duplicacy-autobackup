@@ -19,6 +19,7 @@ ENV BACKUP_SCHEDULE='* * * * *' \
     BACKUP_IMMEDIATELY='no' \
     DUPLICACY_BACKUP_OPTIONS='-threads 4 -stats' \
     DUPLICACY_INIT_OPTIONS='' \
+    DUPLICACY_CONFIG_PATH='' \
     AWS_ACCESS_KEY_ID='' \
     AWS_SECRET_KEY='' \
     WASABI_KEY='' \

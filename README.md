@@ -130,6 +130,11 @@ Use the following environment variables if you want to customize duplicacy's beh
 - `BACKUP_IMMEDIATELY` (`yes`/`no`): indicates if a backup should be performed immediately after the container is started. Equivalent to launching the container and then running `docker exec duplicacy-autobackup /app/duplicacy-autobackup.sh backup`. By default, `no`.
 - `DUPLICACY_INIT_OPTIONS`: options passed to `duplicacy init` the first time a backup is made. By default, `-encrypt` if `BACKUP_ENCRYPTION_KEY` or `BACKUP_ENCRYPTION_KEY_FILE` is not empty.
 - `DUPLICACY_BACKUP_OPTIONS`: options passed to `duplicacy backup` when a backup is performed. By default: `-threads 4 -stats`. **If you are backing up a hard drive (and not a SSD), it is recommended to use `-threads 1 -stats` instead** (see [here](https://duplicacy.com/issue?id=5670666258874368) for more details).
+- `DUPLICACY_CONFIG_PATH`: Creates a .duplicacy folder on a specified path, which you need to mount on your host as not read-only. Useful if you want to mount your backup folder as read-only. For example, if DUPLICACY_CONFIG_PATH = "/config", than:
+
+```
+-v /var/lib/mysql:/data:ro -v /var/lib/duplicacy-config:/config
+```
 
 ### Pruning old backups
 
